@@ -1,5 +1,5 @@
 /*!
- * ui/styles.css — one stylesheet for all three targets.
+ * ui/styles.css — one stylesheet for all three targets ("Midnight" skin: #0e0e10 rooms, #9146ff accents, white focus).
  *
  * Authored against a 1280x720 stage (#app). Each platform's index.html scales
  * the stage to its native resolution (Orsay 960x540 / 1280x720, Tizen
@@ -13,7 +13,7 @@ html, body {
   width: 1280px;
   height: 720px;
   overflow: hidden;
-  background: #08080a;
+  background: #0e0e10;
   color: #efeff1;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
@@ -24,7 +24,7 @@ html, body {
 .tw-scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
 /* The grid sits on an opaque background; the player scene is transparent so
    the video behind #app shows through. */
-#tw-browser { background: #08080a; }
+#tw-browser { background: #0e0e10; }
 #tw-channel { background: transparent; }
 
 /* --- top bar ------------------------------------------------------------ */
@@ -38,7 +38,7 @@ html, body {
    fixed-width buttons. */
 .tw-tips { position: absolute; left: 87px; top: 44.5px; }
 .tw-tip {
-  display: inline-block; margin-left: 24px; vertical-align: middle; color: #a9a9b2;
+  display: inline-block; margin-left: 24px; vertical-align: middle; color: #adadb8;
   text-align: left; white-space: nowrap;
 }
 .tw-tip:first-child { margin-left: 8px; }
@@ -49,10 +49,10 @@ html, body {
 .tw-tip-label {
   display: inline-block; position: relative; top: 1px;
   height: 20px; line-height: 20px; vertical-align: middle;
-  font-size: 20px; font-weight: 300;
+  font-size: 20px; font-weight: 400;
 }
 .tw-tip-active { color: #fff; }
-.tw-tip-active .tw-tip-box { border-bottom-color: rgba(244, 244, 247, 0.55); }
+.tw-tip-active .tw-tip-box { border-bottom-color: #9146ff; }
 .tw-tabs-focused .tw-tip-active .tw-tip-box { border-bottom-color: transparent; }
 /* D-pad cursor for the tab row: a sliding underline separate from the active
    tab marker, so tabs don't read as push buttons. */
@@ -64,14 +64,14 @@ html, body {
 }
 .tw-dot {
   display: inline-block; width: 26px; height: 26px; line-height: 26px;
-  text-align: center; color: #fff; font-weight: 700; font-size: 15px;
+  text-align: center; color: #fff; font-weight: 700; font-size: 15px; border-radius: 6px;
   vertical-align: middle;
 }
 /* The remote's A/B/C buttons render as uniform dark-grey chips — the letter is
    the cue, so the on-screen hint doesn't reproduce the button colours. The class
    names still map to the physical button each represents. White letter (via
    .tw-dot) reads cleanly on this grey. */
-.tw-red, .tw-green, .tw-yellow { background: #36363c; }
+.tw-red, .tw-green, .tw-yellow { background: #2f2f36; }
 
 /* --- grid --------------------------------------------------------------- */
 /* Clips the content; the inner scroller is translated so the focused row stays
@@ -96,12 +96,12 @@ html, body {
 }
 .tw-category-cover {
   position: absolute; left: 5px; top: 0; width: 108px; height: 144px;
-  background: #18181b; border: 3px solid transparent; box-sizing: border-box;
+  background: #1f1f24; border: 3px solid transparent; border-radius: 8px; box-sizing: border-box;
   -webkit-background-clip: padding-box; background-clip: padding-box;
 }
 .tw-category-copy { margin-left: 132px; padding: 0 8px 0 0; }
 .tw-category-name {
-  font-size: 32px; line-height: 38px; color: #fff; font-weight: 500;
+  font-size: 32px; line-height: 38px; color: #fff; font-weight: 600;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .tw-category-stats {
@@ -126,8 +126,8 @@ html, body {
 .tw-cell-game { padding: 9px 10px 17px; }
 .tw-cell-inner { position: relative; }
 .tw-thumb {
-  width: 100%; height: 167.15625px; display: block; background: #18181b;
-  border: 3px solid transparent; border-radius: 0; box-sizing: border-box;
+  width: 100%; height: 167.15625px; display: block; background: #1f1f24;
+  border: 3px solid transparent; border-radius: 8px; box-sizing: border-box;
   /* keep the bg out from under the transparent border so the gap to the focus
      frame shows the page background, not the placeholder grey. */
   -webkit-background-clip: padding-box; background-clip: padding-box;
@@ -157,7 +157,7 @@ html, body {
 .tw-cell-game .tw-meta { padding: 10px 3px 0; }
 /* Stream title: the prominent top line, truncated to one line. */
 .tw-meta-title {
-  font-size: 19px; line-height: 23px; font-weight: 500; color: #fff;
+  font-size: 19px; line-height: 23px; font-weight: 600; color: #fff;
   white-space: nowrap; text-align: left; overflow: hidden; text-overflow: ellipsis;
   margin-bottom: 4px;
 }
@@ -167,7 +167,7 @@ html, body {
 /* Viewer count floats right; the name takes the rest and ellipsises — one line. */
 .tw-meta-views {
   float: right; margin-left: 12px; font-size: 16px; line-height: 20px;
-  color: #c6c6ce; font-weight: 500;
+  color: #adadb8; font-weight: 500;
 }
 .tw-meta-name {
   display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
@@ -177,7 +177,7 @@ html, body {
 /* Games tiles have no title line, so the name is the primary label — bump it
    (and the count) a touch larger than the channel-tile text. */
 .tw-cell-game .tw-meta-row { line-height: 22px; }
-.tw-cell-game .tw-meta-name { font-size: 19px; line-height: 22px; font-weight: 500; color: #fff; }
+.tw-cell-game .tw-meta-name { font-size: 19px; line-height: 22px; font-weight: 600; color: #fff; }
 .tw-cell-game .tw-meta-views { font-size: 17px; line-height: 22px; }
 
 /* --- Following (sectioned view + offline channel tiles) ------------------ */
@@ -189,7 +189,7 @@ html, body {
 /* Section heading; its left padding lines the text up with the thumbnail
    artwork (5px cell padding + 3px transparent thumb border = 8px). */
 .tw-sec-head {
-  font-size: 20px; line-height: 24px; font-weight: 600; color: #efeff1;
+  font-size: 20px; line-height: 24px; font-weight: 700; color: #fff;
   text-align: left; padding: 4px 8px 9px;
 }
 /* Game/category tiles have 10px cell padding, so the section expands by 5px
@@ -208,7 +208,7 @@ html, body {
   display: inline-block; border: 3px solid transparent; box-sizing: border-box;
   -webkit-background-clip: padding-box; background-clip: padding-box;
 }
-.tw-chan-avatar-ph { background: #3a3a42; }
+.tw-chan-avatar-ph { background: #2f2f36; }
 .tw-chan-name {
   margin-top: 10px; font-size: 18px; color: #dedee3;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -224,11 +224,11 @@ html, body {
 .tw-follow-empty {
   display: none; position: absolute; left: 0; right: 0; top: 50%;
   -webkit-transform: translateY(-50%); transform: translateY(-50%);
-  text-align: center; font-size: 34px; color: #5c5c66; padding: 0 40px;
+  text-align: center; font-size: 34px; color: #8a8a96; padding: 0 40px;
 }
 
 /* --- channel page (info + VODs) ----------------------------------------- */
-#tw-cpage { background: #08080a; }
+#tw-cpage { background: #0e0e10; }
 .tw-cp-head { position: absolute; left: 43px; right: 43px; top: 36px; height: 120px; }
 .tw-cp-avatar {
   position: absolute; left: 0; top: 0; width: 96px; height: 96px;
@@ -251,7 +251,7 @@ html, body {
 }
 .tw-cp-empty {
   display: none; position: absolute; left: 0; right: 0; top: 40%;
-  text-align: center; font-size: 28px; color: #5c5c66;
+  text-align: center; font-size: 28px; color: #8a8a96;
 }
 #tw-cp-loading { top: 172px; }
 
@@ -272,8 +272,8 @@ html, body {
 }
 .tw-now-icon {
   position: absolute; left: 0; top: 5px; width: 68px; height: 68px;
-  background: #25252b; border: 0;
-  border-radius: 0; box-sizing: border-box; object-fit: cover;
+  background: #1f1f24; border: 0;
+  border-radius: 8px; box-sizing: border-box; object-fit: cover;
 }
 .tw-now-copy { padding-top: 0; }
 .tw-now-kicker {
@@ -282,7 +282,7 @@ html, body {
 }
 .tw-now-kind {
   display: inline-block; height: 22px; line-height: 22px; padding: 0 8px;
-  background: #f4f4f7; color: #101116; border-radius: 0;
+  background: #f4f4f7; color: #101116; border-radius: 4px;
   font-size: 13px; font-weight: 700; vertical-align: top;
 }
 .tw-content-live .tw-now-kind { background: #e91916; color: #fff; }
@@ -305,7 +305,7 @@ html, body {
   display: inline; font-size: 30px; color: #fff; font-weight: 600;
 }
 .tw-now-game {
-  display: none; margin-left: 18px; padding-left: 16px; border-left: 4px solid rgba(244, 244, 247, 0.48);
+  display: none; margin-left: 18px; padding-left: 16px; border-left: 4px solid #9146ff;
   font-size: 18px; color: #c5cedb; font-weight: 300; vertical-align: 3px;
 }
 .tw-has-game .tw-now-game { display: inline; }
@@ -323,10 +323,10 @@ html, body {
 .tw-progress-total { left: auto; right: 0; text-align: right; }
 .tw-progress-track {
   position: absolute; left: 76px; right: 76px; top: 8px; height: 8px;
-  background: rgba(255, 255, 255, 0.24); border-radius: 0; overflow: hidden;
+  background: rgba(255, 255, 255, 0.24); border-radius: 4px; overflow: hidden;
 }
 .tw-progress-fill {
-  display: block; width: 0%; height: 8px; background: #f4f4f7; border-radius: 0;
+  display: block; width: 0%; height: 8px; background: #9146ff; border-radius: 4px;
 }
 .tw-progress.tw-focused {
   outline: 2px solid rgba(244, 244, 247, 0.72); outline-offset: 6px;
@@ -335,14 +335,14 @@ html, body {
 .tw-seek-flash {
   display: none; position: absolute; top: 50%; width: 118px; height: 54px; margin-top: -27px;
   z-index: 5; line-height: 54px; text-align: center; font-size: 24px; font-weight: 500;
-  color: #fff; background: rgba(24, 24, 27, 0.72);
+  color: #fff; background: rgba(24, 24, 27, 0.88); border-radius: 10px;
 }
 .tw-seek-flash-left { left: 180px; }
 .tw-seek-flash-right { right: 180px; }
 .tw-pause-indicator {
   display: none; position: absolute; left: 50%; top: 50%; width: 132px; height: 132px;
   margin-left: -66px; margin-top: -66px; z-index: 5; text-align: center;
-  background: rgba(24, 24, 27, 0.82);
+  background: rgba(24, 24, 27, 0.88); border-radius: 66px;
 }
 .tw-pause-indicator span {
   display: inline-block; width: 22px; height: 78px; margin: 27px 10px 0;
@@ -355,8 +355,8 @@ html, body {
 .tw-control {
   display: inline-block; height: 38px; line-height: 38px; margin-right: 12px; padding: 0 20px;
   box-sizing: border-box; color: #eff1f6; font-size: 17px; font-weight: 500; text-align: center;
-  background: #323239; border: 0;
-  border-radius: 0; vertical-align: top; outline: 0;
+  background: #2f2f36; border: 0;
+  border-radius: 8px; vertical-align: top; outline: 0;
 }
 .tw-control.tw-focused {
   background: #f4f4f7; color: #111318; outline: 4px solid #f4f4f7;
@@ -364,11 +364,11 @@ html, body {
 .tw-panel {
   display: none; position: absolute; left: 42px; bottom: 98px; width: 318px; height: 184px;
   background: #18181b; border: 0;
-  border-radius: 0; box-sizing: border-box; padding: 22px 22px 20px; z-index: 5;
+  border-radius: 12px; box-sizing: border-box; padding: 22px 22px 20px; z-index: 5;
   text-align: left; box-shadow: none; outline: 4px solid rgba(244, 244, 247, 0.95);
 }
 .tw-panel-mark {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #f4f4f7;
+  position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #9146ff;
 }
 .tw-panel-quality { margin-top: 0; }
 .tw-quality-label {
@@ -378,7 +378,7 @@ html, body {
 .tw-quality-picker {
   margin-top: 12px; height: 76px; line-height: 76px; text-align: center;
   background: #2f2f36; border: 0;
-  border-radius: 0; white-space: nowrap; overflow: hidden;
+  border-radius: 8px; white-space: nowrap; overflow: hidden;
 }
 .tw-quality-arrow {
   display: inline-block; width: 36px; height: 76px; line-height: 76px;
@@ -393,12 +393,12 @@ html, body {
 /* --- chat rail (read-only) ---------------------------------------------- */
 .tw-chat {
   display: none; position: absolute; left: 0; top: 0; width: 360px; height: 720px;
-  background: #08080a; border-left: 0;
+  background: #0e0e10; border-left: 1px solid #26262c;
   box-sizing: border-box; z-index: 5; overflow: hidden;
 }
 .tw-chat-head {
   position: absolute; left: 12px; right: 12px; top: 12px; height: 92px;
-  background: #303038;
+  background: #1f1f24; border-radius: 12px;
   box-sizing: border-box; padding: 14px; text-align: left;
 }
 .tw-chat-avatar-wrap {
@@ -445,7 +445,7 @@ html, body {
 .tw-chat-row {
   position: relative; font-size: 16px; line-height: 20px; margin: 0 0 8px;
   padding: 9px 10px 10px; word-wrap: break-word; color: #e6e8ee;
-  background: #1f1f24; box-sizing: border-box;
+  background: #1f1f24; border-radius: 8px; box-sizing: border-box;
 }
 .tw-chat-row:last-child { margin-bottom: 0; }
 .tw-chat-nick {
@@ -460,9 +460,9 @@ html, body {
 .tw-account {
   position: absolute; top: 43px; right: 43px; height: 36px; line-height: 36px;
   max-width: 300px; padding: 0 20px; box-sizing: border-box;
-  font-size: 17px; font-weight: 500; text-align: center; color: #eff1f6;
+  font-size: 17px; font-weight: 600; text-align: center; color: #fff;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  border: 0; border-radius: 0; outline: 0; background: #323239;
+  border: 0; border-radius: 18px; outline: 0; background: #9146ff;
   -webkit-transition: background 0.105s ease-out, color 0.105s ease-out;
   transition: background 0.105s ease-out, color 0.105s ease-out;
 }
@@ -471,17 +471,17 @@ html, body {
 }
 
 /* --- login scene -------------------------------------------------------- */
-#tw-login { background: #08080a; }
+#tw-login { background: #0e0e10; }
 .tw-login-card {
   position: absolute; left: 50%; top: 50%; width: 760px; margin-left: -380px; text-align: center;
   -webkit-transform: translateY(-50%); transform: translateY(-50%);
 }
 .tw-login-logo { height: 44px; }
-.tw-login-title { font-size: 34px; color: #fff; margin: 14px 0 10px; }
+.tw-login-title { font-size: 34px; font-weight: 600; color: #fff; margin: 14px 0 10px; }
 .tw-login-help { font-size: 20px; color: #c8c8cf; line-height: 1.4; margin: 0 auto 22px; max-width: 660px; }
 .tw-login-btn {
   display: inline-block; margin-top: 22px; padding: 16px 54px; font-size: 24px;
-  background: #3f3f47; color: #efeff1; border-radius: 0;
+  background: #9146ff; color: #fff; border-radius: 10px;
 }
 .tw-login-btn.tw-focused { background: #f4f4f7; color: #18181b; }
 .tw-login-code { font-size: 64px; font-weight: 700; letter-spacing: 6px; color: #f4f4f7; margin: 16px 0 10px; }
@@ -511,11 +511,11 @@ html, body {
 .tw-status-box {
   position: absolute; left: 50%; top: 50%; width: 104px; height: 104px;
   margin-left: -52px; margin-top: -52px; padding: 0;
-  box-sizing: border-box; text-align: center; background: rgba(24, 24, 27, 0.82);
+  box-sizing: border-box; text-align: center; background: rgba(24, 24, 27, 0.88); border-radius: 16px;
 }
 .tw-spinner {
   display: inline-block; width: 46px; height: 46px; box-sizing: border-box; vertical-align: middle;
-  border: 4px solid rgba(244, 244, 247, 0.16); border-top-color: #f4f4f7; border-radius: 50%;
+  border: 4px solid rgba(145, 70, 255, 0.25); border-top-color: #9146ff; border-radius: 50%;
   -webkit-animation: tw-spin 0.72s linear infinite; animation: tw-spin 0.72s linear infinite;
 }
 /* Inside an overlay the ring centers in the box; standalone (login) it stays
