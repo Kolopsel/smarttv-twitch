@@ -67,6 +67,7 @@
     "host": "node tools/host.js",
     "host:package": "node tools/bin.js",
     "tizen:setup": "node tools/tizen-setup.js",
+    "tv": "node tools/tv/tv-harness.js",
     "release": "node tools/publish.js --build-only",
     "release:publish": "node tools/publish.js"
   },

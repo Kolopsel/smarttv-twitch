@@ -12,6 +12,7 @@ build/
 .buildResult/
 
 # Tizen / Samsung SDK
+tools/tv/tv.local.json
 .tizen-cli-history
 .sign/
 author.p12
