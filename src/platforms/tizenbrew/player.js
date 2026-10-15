@@ -5,8 +5,13 @@
  * expose webapis.avplay to it, so — unlike the standalone Tizen build — we play
  * through HTML5 <video> + hls.js (Media Source Extensions), the same path the
  * web harness uses. The difference from the harness: a real TV origin needs no
- * CORS proxy. Twitch's usher/segment CDNs send permissive Access-Control-Allow-
- * Origin, so the master URL and the whole variant/segment chain load directly.
+ * CORS proxy. But Twitch's playlist CDN rejects browser fetches whose
+ * Origin is http://127.0.0.1:8081 (TizenBrew's local serve origin) with a
+ * 403, so hls.js cannot load any variant playlist here (verified 2026-10-15:
+ * the same URL returns 200 with no Origin, a localhost Origin, or a
+ * twitch.tv Origin). The TV's native <video> HLS path issues platform-player
+ * requests without that browser Origin, so native playback is preferred on
+ * this target and hls.js remains the fallback where native HLS is absent.
  */
 (function (global) {
   'use strict';
@@ -31,8 +36,13 @@
     var levelMap = [-1];        // quality index -> hls level index (-1 = auto)
     var qcb = null;
     var baseW = 0, baseH = 0;
+
+    function canNativeHls() {
+      try { return !!video.canPlayType('application/vnd.apple.mpegurl'); } catch (e) { return false; }
+    }
     var pendingSeek = null;
     var seekTimer = null;
+    var mediaActive = false;
 
     function publishQualities() {
       if (qcb) { qcb(qualities); }
@@ -59,6 +69,9 @@
     TW.dom.on(video, 'waiting', function () { cb.onBufferingStart(); });
     TW.dom.on(video, 'playing', function () { cb.onBufferingComplete(); cb.onPlaying(); });
     TW.dom.on(video, 'ended', function () { cb.onEnded(); });
+    TW.dom.on(video, 'error', function () {
+      if (mediaActive) { cb.onError(TW.i18n.t('ERROR_RENDER')); }
+    });
 
     function playFromStartIfVod(isVod) {
       if (isVod) {
@@ -94,6 +107,7 @@
     return {
       load: function (rawUrl) {
         var isVod = rawUrl.indexOf('/vod/') >= 0;
+        mediaActive = true;
 
         // Clips are a progressive MP4, not HLS — play them on the <video>
         // element directly (single quality). Live + VODs are HLS (.m3u8).
@@ -106,7 +120,7 @@
           return;
         }
 
-        if (Hls && Hls.isSupported()) {
+        if (!canNativeHls() && Hls && Hls.isSupported()) {
           hls = new Hls({ lowLatencyMode: !isVod, startPosition: isVod ? 0 : -1 });
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
             // Twitch lists source first; present highest-first after "Auto".
@@ -127,7 +141,9 @@
           });
           hls.loadSource(rawUrl);
           hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        } else if (canNativeHls()) {
+          qualities = ['Auto']; levelMap = [-1];
+          try { if (hls) { hls.destroy(); hls = null; } } catch (e) {}
           video.onloadedmetadata = function () { playFromStartIfVod(isVod); };
           video.src = rawUrl;
           publishQualities();
@@ -135,7 +151,7 @@
           cb.onError('HLS not supported on this TV');
         }
       },
-      stop: function () { try { clearPendingSeek(); if (hls) { hls.destroy(); hls = null; } video.removeAttribute('src'); video.load(); } catch (e) {} },
+      stop: function () { mediaActive = false; try { clearPendingSeek(); if (hls) { hls.destroy(); hls = null; } video.removeAttribute('src'); video.load(); } catch (e) {} },
       destroy: function () { this.stop(); },
       setDisplayArea: setVideoRect,
       getQualities: function (fn) { qcb = fn; fn(qualities); },
