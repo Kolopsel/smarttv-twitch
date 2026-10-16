@@ -12,7 +12,8 @@ const {
 const CLI = path.resolve(__dirname, '..', 'tools/tv/tv-harness.js');
 
 test('parseArgs separates leading flags from the command and its args', () => {
-  const parsed = parseArgs(['--tv=192.168.1.26', '--yes', '--dry-run', 'uninstall', 'pkg.id']);
+  const parsed = parseArgs(['--tv=192.168.1.26', '--yes', '--dry-run', '--relay', 'uninstall', 'pkg.id']);
+  assert.equal(parsed.flags.relay, true);
   assert.equal(parsed.flags.tvIp, '192.168.1.26');
   assert.equal(parsed.flags.yes, true);
   assert.equal(parsed.flags.dryRun, true);

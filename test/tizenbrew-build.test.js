@@ -23,6 +23,8 @@ test('tizenbrew build emits a valid TizenBrew app-module manifest', () => {
     assert.equal(pkg.appPath, 'app/index.html');           // root-relative, nests under app/
     assert.ok(Array.isArray(pkg.keys) && pkg.keys.indexOf('ColorF0Red') !== -1);
     assert.ok(fs.existsSync(path.join(out, pkg.appPath)));  // appPath actually resolves
+    assert.equal(pkg.serviceFile, 'app/platform/proxy-service.js');
+    assert.ok(fs.existsSync(path.join(out, pkg.serviceFile))); // serviceFile actually resolves
   });
 });
 
@@ -30,7 +32,8 @@ test('tizenbrew build lays the runnable app under app/', () => {
   withBuild((out) => {
     const app = path.join(out, 'app');
     ['index.html', 'core/app.js', 'core/twitch/api.js', 'ui/styles.css',
-     'platform/player.js', 'platform/keys.js', 'platform/system.js', 'platform/boot.js']
+     'platform/player.js', 'platform/keys.js', 'platform/system.js', 'platform/boot.js',
+     'platform/proxy-service.js']
       .forEach((f) => assert.ok(fs.existsSync(path.join(app, f)), 'missing ' + f));
   });
 });
@@ -68,6 +71,8 @@ test('root package is explicitly addable as a TizenBrew GitHub module', () => {
   assert.ok(rootPkg.keywords.includes('tizenbrew'));
   assert.deepEqual(rootPkg.keys, MODULE_PKG.keys);
   assert.ok(fs.existsSync(path.join(__dirname, '..', rootPkg.appPath)));
+  assert.equal(rootPkg.serviceFile, 'src/platforms/tizenbrew/proxy-service.js');
+  assert.ok(fs.existsSync(path.join(__dirname, '..', rootPkg.serviceFile)));
 });
 
 test('explicit TizenBrew GitHub entrypoint resolves source-tree assets', () => {

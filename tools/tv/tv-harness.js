@@ -28,6 +28,7 @@ const dgram = require('dgram');
 const { spawnSync } = require('child_process');
 
 const SDB_PORT = 26101;
+const RELAY_PORT = 47995;
 const REST_PORT = 8001;
 const TIZENBREW_APP_ID = 'xvvl3S1bvH.TizenBrewStandalone';
 const SDK_INSTALLER_URL =
@@ -284,7 +285,7 @@ function makeSdb(ctx) {
   }
   function ensureSerial() {
     if (ctx.serial) { return ctx.serial; }
-    const wanted = ctx.tvIp + ':' + SDB_PORT;
+    const wanted = ctx.tvIp + ':' + (ctx.relay ? RELAY_PORT : SDB_PORT);
     let list = devices();
     let match = list.find((d) => d.serial === wanted);
     if (!match || match.state !== 'device') {
@@ -297,6 +298,12 @@ function makeSdb(ctx) {
       die('TV reports this PC as unauthorized. Accept the RSA prompt on the TV screen, then retry.');
     }
     if (!match || match.state !== 'device') {
+      if (ctx.relay) {
+        die('No SDB device via the Twellie relay at ' + wanted + '. Is the updated ' +
+          'Twellie module installed and its service running (launch Twellie once, or ' +
+          'enable its service auto-launch in TizenBrew)? If the TV shows an ' +
+          'authorization prompt, accept it and retry.');
+      }
       die('No authorized SDB device. On the TV: Apps panel, enter 12345, set Developer ' +
         'Mode ON and Host PC IP to this PC (' + localIpv4Addresses().join(', ') +
         '), reboot the TV, then run `doctor` again. ' +
@@ -331,7 +338,7 @@ function readLocalConfig() {
 }
 
 function parseArgs(argv) {
-  const flags = { tvIp: null, serial: null, sdk: null, yes: false, dryRun: false, json: false };
+  const flags = { tvIp: null, serial: null, sdk: null, yes: false, dryRun: false, json: false, relay: false };
   let i = 0;
   while (i < argv.length) {
     const a = argv[i];
@@ -339,6 +346,7 @@ function parseArgs(argv) {
     if (a === '--yes') { flags.yes = true; i++; continue; }
     if (a === '--dry-run') { flags.dryRun = true; i++; continue; }
     if (a === '--json') { flags.json = true; i++; continue; }
+    if (a === '--relay') { flags.relay = true; i++; continue; }
     const m = a.match(/^--(tv|serial|sdk)(?:=(.*))?$/);
     if (m) {
       const value = m[2] != null ? m[2] : argv[i + 1];
@@ -379,7 +387,7 @@ async function collectDoctor(ctx) {
   let infoError = null;
   try { info = await tvInfo(ctx.tvIp); } catch (e) { infoError = e.message; }
   const ports = {};
-  for (const p of [SDB_PORT, REST_PORT, 8002]) {
+  for (const p of [SDB_PORT, REST_PORT, 8002, RELAY_PORT]) {
     ports[p] = (await probePort(ctx.tvIp, p)).open;
   }
   let devicesList = [];
@@ -407,6 +415,7 @@ async function collectDoctor(ctx) {
     sdbDevices: devicesList,
     pairedHostOk,
     sdbReady,
+    relayReady: !!ports[RELAY_PORT],
   };
 }
 
@@ -433,6 +442,8 @@ const USAGE = [
   '',
   'Flags: --tv <ip>  --serial <id>  --sdk <tizen-studio root>',
   '       --yes (confirm destructive ops)  --dry-run  --json',
+  '       --relay (SDB via the Twellie TV relay on port 47995; keeps',
+  '       working while the TV Host PC IP stays 127.0.0.1)',
   '',
   'Read-only (no pairing needed):',
   '  discover                 Find Samsung TVs on the LAN (SSDP)',
@@ -526,7 +537,7 @@ async function main() {
   const tools = resolveTools(process.env, flags.sdk);
   const ctx = {
     tvIp: null, serial: flags.serial, sdkRoot: flags.sdk,
-    tools, dryRun: flags.dryRun, yes: flags.yes, json: flags.json,
+    tools, dryRun: flags.dryRun, yes: flags.yes, json: flags.json, relay: flags.relay,
   };
 
   if (command === 'discover') {
@@ -598,6 +609,10 @@ async function main() {
       console.log('');
       if (report.sdbReady) {
         console.log('SDB is paired and ready: shell, apps, install, uninstall, push/pull, dlog and debug are available.');
+      } else if (report.relayReady) {
+        console.log('Twellie SDB relay is reachable on port ' + RELAY_PORT +
+          ': run `node tools/tv/tv-harness.js --relay connect` for shell/apps/logs/debug');
+        console.log('without changing the TV Host PC IP away from 127.0.0.1.');
       } else if (!report.tools.sdb.version) {
         console.log('Next step: install the tools with `node tools/tv/tv-harness.js setup-sdk --yes`, then pair:');
         console.log(pairingSteps(report));
@@ -703,7 +718,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  SDB_PORT, REST_PORT, TIZENBREW_APP_ID, SDK_INSTALLER_URL,
+  SDB_PORT, RELAY_PORT, REST_PORT, TIZENBREW_APP_ID, SDK_INSTALLER_URL,
   quoteWin, parseArgs, parseDevices, parseDebugPort, parseSsdp,
   candidateSdkRoots, resolveTool, pairingSteps,
 };

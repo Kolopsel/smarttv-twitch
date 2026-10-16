@@ -44,6 +44,7 @@ const MODULE_PKG = {
   packageType: 'app',
   appName: 'Twellie',
   appPath: 'app/index.html',
+  serviceFile: 'app/platform/proxy-service.js',
   keys: TIZENBREW_KEYS,
 };
 

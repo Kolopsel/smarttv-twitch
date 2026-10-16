@@ -1,6 +1,6 @@
 # Install this fork (Midnight skin) with TizenBrew
 
-This fork is Twellie 4.1.0 with a redesigned TV interface: near-black
+This fork is Twellie 4.1.2 with a redesigned TV interface: near-black
 `#0e0e10` rooms, soft-cornered thumbnails and panels, Twitch purple
 (`#9146ff`) for the active tab, playback progress, login and account
 actions, and the same bright-white remote focus frame as upstream.
@@ -39,7 +39,7 @@ under your GitHub account, with a release, before the TV can see it.
    ```
 
 3. On your fork's GitHub page: **Releases → Draft a new release**,
-   tag `v4.1.0`, title `v4.1.0 Midnight skin`, **Publish release**
+   tag `v4.1.2`, title `v4.1.2 Midnight skin + relay playback`, **Publish release**
    (a draft does not count — jsDelivr only sees published releases).
 
 ## 2. Add it on the TV
@@ -52,6 +52,13 @@ remains.
 2. Open **Module Manager → Add GitHub module**.
 3. Enter `<YOUR-USERNAME>/smarttv-twitch` and confirm.
 4. Back in **Module Manager**, select **Twellie** to launch it.
+5. Recommended: in Twellie's module options, enable its service to
+   auto-launch. The service relays HLS playback (Twitch's playlist CDN
+   rejects the `127.0.0.1` page origin, so playback routes through the
+   TV-local relay) and forwards SDB debugging to this PC without
+   changing the TV's Host PC IP (see `tools/tv/README.md`). Note the
+   app now runs on the `localhost` spelling of TizenBrew's local
+   server, so a previous Twitch login must be repeated once.
 
 Watching works immediately without an account. To get the
 **Following** tab, open the purple **Log in** pill in the top bar and

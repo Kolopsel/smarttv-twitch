@@ -81,6 +81,29 @@ port, then prints the local URL to attach Chrome DevTools
 (`chrome://inspect`). That is the fastest way to see Twellie's console
 and network errors on real hardware.
 
+## Persistent access with Host PC IP left at 127.0.0.1 (relay mode)
+
+Twellie's TizenBrew module ships a `serviceFile` relay that runs in
+TizenBrew's Node service on the TV. It forwards LAN TCP connections on
+port **47995** to the TV's own SDB daemon at `127.0.0.1:26101`, so the
+daemon sees the loopback host it already trusts while this PC keeps
+full SDB access — no Developer Mode IP change, and TizenBrew keeps
+working exactly as before. Only private-LAN source addresses are
+accepted, and SDB's RSA authorization still applies end to end.
+
+```powershell
+node tools/tv/tv-harness.js --relay connect
+node tools/tv/tv-harness.js --relay shell -- pkgcmd -l
+node tools/tv/tv-harness.js --relay dlog
+```
+
+For access while Twellie is closed, enable the module service's
+auto-launch in TizenBrew's Module Manager; otherwise the relay runs
+whenever Twellie has been launched. `doctor` probes port 47995 and
+points at relay mode when it answers. The same service also relays
+Twellie's HLS playback on loopback port 47994 (see
+`src/platforms/tizenbrew/proxy-service.js`).
+
 ## Safety rails
 
 - `uninstall` refuses to run without `--yes`.

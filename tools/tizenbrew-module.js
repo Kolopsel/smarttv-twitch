@@ -64,6 +64,10 @@ function check() {
 
   const appPath = path.join(ROOT, pkg.appPath);
   assert(fs.existsSync(appPath), 'appPath file does not exist: ' + pkg.appPath);
+  assert(typeof pkg.serviceFile === 'string' && pkg.serviceFile.length,
+    'package.json serviceFile must name the TizenBrew relay service');
+  assert(fs.existsSync(path.join(ROOT, pkg.serviceFile)),
+    'serviceFile does not exist: ' + pkg.serviceFile);
 
   const html = read(pkg.appPath);
   assert(html.indexOf('<base href="../src/">') !== -1, 'TizenBrew entrypoint must point its base href at ../src/');
