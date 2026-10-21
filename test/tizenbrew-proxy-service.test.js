@@ -93,7 +93,7 @@ test('relay serves health + a rewritten playlist without forwarding Origin, and 
   await new Promise((resolve) => echo.listen(ECHO_PORT, '127.0.0.1', resolve));
   const relay = api.createSdbRelay('127.0.0.1', ECHO_PORT);
   await new Promise((resolve) => relay.listen(RELAY_TEST_PORT, '127.0.0.1', resolve));
-  api.start({ httpPort: HTTP_PORT, relayPort: RELAY_PORT });
+  api.start({ httpPort: HTTP_PORT, relayPort: RELAY_PORT, adConfig: { enabled: false, proxies: [] } });
   try {
     const health = await httpGet('http://127.0.0.1:' + HTTP_PORT + '/health');
     assert.equal(health.status, 200);

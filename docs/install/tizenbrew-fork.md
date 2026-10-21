@@ -1,6 +1,6 @@
 # Install this fork (Midnight skin) with TizenBrew
 
-This fork is Twellie 4.1.2 with a redesigned TV interface: near-black
+This fork is Twellie 4.1.3 with a redesigned TV interface: near-black
 `#0e0e10` rooms, soft-cornered thumbnails and panels, Twitch purple
 (`#9146ff`) for the active tab, playback progress, login and account
 actions, and the same bright-white remote focus frame as upstream.
@@ -39,7 +39,7 @@ under your GitHub account, with a release, before the TV can see it.
    ```
 
 3. On your fork's GitHub page: **Releases → Draft a new release**,
-   tag `v4.1.2`, title `v4.1.2 Midnight skin + relay playback`, **Publish release**
+   tag `v4.1.3`, title `v4.1.3 Midnight skin + relay playback + ad-free sessions`, **Publish release**
    (a draft does not count — jsDelivr only sees published releases).
 
 ## 2. Add it on the TV
@@ -59,6 +59,30 @@ remains.
    changing the TV's Host PC IP (see `tools/tv/README.md`). Note the
    app now runs on the `localhost` spelling of TizenBrew's local
    server, so a previous Twitch login must be repeated once.
+
+### Ad-free playback sessions (since 4.1.3)
+
+The TV-local relay also applies the ad-avoidance techniques of
+[TTV LOL PRO](https://github.com/younesaassila/ttv-lol-pro): the
+playback session (Usher master playlist) is requested through a
+community "optimized proxy" in a country where Twitch currently
+serves no ads, and if a media playlist still contains a
+server-stitched ad, the relay mints an anonymous playback token,
+fetches a clean same-channel session, and serves the matching
+quality instead. Twellie's "Commercial Break In Progress..."
+slate should therefore no longer appear. Video segments are
+fetched directly from Twitch's CDN by the TV-local relay; only
+the small session/token requests use the third-party proxy. Because the session requests pass through
+third-party proxies (`chromium.api.cdn-perfprod.com:2023` and
+`firefox.api.cdn-perfprod.com:2023` by default), Twitch sees the
+proxy's IP/country, and the proxy operator can see which channel
+is being opened. If a proxy is down, slow, or has started serving
+ads, the relay falls back to other routes and finally to your
+direct connection (playback continues, possibly with ads). The
+service honours `TWELLIE_AD_PROXIES` (comma-separated `host:port`
+list), `TWELLIE_AD_MAX_ATTEMPTS`, `TWELLIE_AD_COOLDOWN`,
+`TWELLIE_AD_TIMEOUT_MS`, and `TWELLIE_AD_AVOIDANCE=0` to turn the
+feature off entirely.
 
 Watching works immediately without an account. To get the
 **Following** tab, open the purple **Log in** pill in the top bar and
